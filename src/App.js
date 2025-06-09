@@ -1,3 +1,7 @@
+/* global __app_id, __firebase_config, __initial_auth_token */
+// Ang linya sa ibabaw nagsulti sa ESLint nga kining mga variable (`__app_id`, `__firebase_config`, `__initial_auth_token`) kay global nga gihubit.
+// Kini makapugong sa "is not defined" nga mga sayop sa ESLint sa panahon sa pagtukod.
+
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
@@ -24,6 +28,7 @@ function App() {
     try {
       // Access ang mga environment variable na ibinigay ng Netlify (REACT_APP_ prefix)
       // Fallback sa global na __ variables para sa Canvas environment o default values kung hindi pa nakatakda
+      // Ang pag-check sa `typeof process !== 'undefined'` ay nagsisiguro na ang code ay tatakbo sa parehong build at runtime environments.
       const appId = typeof process !== 'undefined' && process.env.REACT_APP_APP_ID ? process.env.REACT_APP_APP_ID : (typeof __app_id !== 'undefined' ? __app_id : 'default-padayon-app');
       const firebaseConfigString = typeof process !== 'undefined' && process.env.REACT_APP_FIREBASE_CONFIG ? process.env.REACT_APP_FIREBASE_CONFIG : (typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
       let firebaseConfig = {};
@@ -578,7 +583,7 @@ const FreedomWall = () => {
       await addDoc(postsColRef, {
         content: newPostContent,
         authorId: userId,
-        // Gumamit ng 'Anonymous' kung `postAnonymously` ay true, kung hindi ay gamitin ang email ng user o 'Guest'
+        // Gumamit ng 'Anonymous' kung `postAnonymously` ay true, kung hindi ay gamitin ang email ng user o 'Bisita'
         authorName: postAnonymously ? 'Anonymous' : (user?.email || 'Bisita'),
         isAnonymous: postAnonymously,
         timestamp: serverTimestamp(), // Gumamit ng server timestamp para sa pare-parehong pag-oorganisa
